@@ -1,8 +1,12 @@
 package co.supi.school;
 
-import co.supi.school.application.student.enroll.StudentEnroll;
-import co.supi.school.application.student.enroll.StudentEnrollDTO;
-import co.supi.school.infra.student.StudentRepositoryMemory;
+import co.supi.school.academic.application.student.enroll.StudentEnroll;
+import co.supi.school.academic.application.student.enroll.StudentEnrollDTO;
+import co.supi.school.academic.domain.student.StudentEnrolledLog;
+import co.supi.school.academic.infra.student.StudentRepositoryMemory;
+import co.supi.school.gamification.application.StampGeneratorNewStudent;
+import co.supi.school.gamification.infra.stamp.StampRepositoryMemory;
+import co.supi.school.shared.domain.event.EventPublisher;
 
 public class StudentEnrollByPrompt {
     public static void main(String[] args) {
@@ -10,8 +14,13 @@ public class StudentEnrollByPrompt {
         String uui = "99999999999";
         String email = "john.dee@mail.com";
 
-        StudentEnroll enroll = new StudentEnroll(new StudentRepositoryMemory());
-        enroll.execute(new StudentEnrollDTO(name, uui, email));
+        StudentEnrollDTO studentEnrollDTO = new StudentEnrollDTO(name, uui, email);
+        EventPublisher eventPublisher = new EventPublisher();
+        eventPublisher.add(new StudentEnrolledLog());
+        eventPublisher.add(new StampGeneratorNewStudent(new StampRepositoryMemory()));
+
+        StudentEnroll enroll = new StudentEnroll(new StudentRepositoryMemory(), eventPublisher);
+        enroll.execute(studentEnrollDTO);
 
     }
 }

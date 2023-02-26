@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-import co.supi.school.domain.student.Email;
+import co.supi.school.academic.domain.student.Email;
 
 public class EmailTest {
 
